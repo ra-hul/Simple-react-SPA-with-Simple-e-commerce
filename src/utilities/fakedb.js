@@ -6,6 +6,9 @@ const addToDb = id => {
     shopping_cart[id] = 1;
   }
   else {
+    //  When receiving data from a web server, the data is always a string.
+
+    // Parse the data with JSON.parse(), and the data becomes a JavaScript object.
     shopping_cart = JSON.parse(exists);
     if (shopping_cart[id]) {
       const newCount = shopping_cart[id] + 1;
