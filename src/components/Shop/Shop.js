@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addToDb } from '../../utilities/fakedb';
+import { addToDb, getStoredCart } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css'
@@ -9,11 +9,29 @@ const Shop = () => {
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
+        console.log('product API called');
         fetch('./products.JSON')
             .then(res => res.json())
-            .then(data => setProducts(data))
+            .then(data => {
+                setProducts(data)
+                console.log('products received')
+            });
     }, [])
-
+    useEffect(() => {
+        console.log('L S called')
+        if (products.length) {
+            const savedCart = getStoredCart();
+            const storedCart = [];
+            for (const key in savedCart) {
+                console.log(key);
+                const addedProduct = products.find(product => product.key
+                    === key);
+                storedCart.push(addedProduct);
+            }
+            setCart(storedCart);
+        }
+        // dependecy on products,whenever products will changed this L S called wiil call this useEffect
+    }, [products])
     const handleAddToCart = (product) => {
         const newCart = [...cart, product];
         setCart(newCart);
