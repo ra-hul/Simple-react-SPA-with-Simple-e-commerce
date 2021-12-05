@@ -9,24 +9,32 @@ const Shop = () => {
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
-        console.log('product API called');
+
         fetch('./products.JSON')
             .then(res => res.json())
             .then(data => {
                 setProducts(data)
-                console.log('products received')
+
             });
     }, [])
     useEffect(() => {
-        console.log('L S called')
+
         if (products.length) {
             const savedCart = getStoredCart();
             const storedCart = [];
             for (const key in savedCart) {
-                console.log(key);
+                console.log(key, savedCart[key]);
                 const addedProduct = products.find(product => product.key
                     === key);
-                storedCart.push(addedProduct);
+                if (addedProduct) {
+                    const quantity = savedCart[key];
+                    addedProduct.quantity = quantity;
+                    console.log(addedProduct);
+                    storedCart.push(addedProduct);
+
+                }
+
+
             }
             setCart(storedCart);
         }
